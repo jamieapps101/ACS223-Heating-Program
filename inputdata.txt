@@ -1,0 +1,9 @@
+1	SmallOffice	11
+2	MediumOffice	16
+3	LargeOffice	20
+4	SmallMeetingRoom	35
+5	MediumMeetingRoom	45
+6	LargeMeetingRoom	65
+7	SmallOpenPlan	75
+8	MediumOpenPlan	85
+9	LargeOpenPlan	100
