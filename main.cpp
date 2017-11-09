@@ -97,9 +97,28 @@ void getInputData( struct * officeStructure input, std::string inputLine)
 	spaceIndex[4] = currentIndex-1;
 	int sizeStore[3] = {spaceIndex[0],spaceIndex[2] - spaceIndex[1],spaceIndex[4] - spaceIndex[3]};
 	int indexStore[3] = {0,spaceIndex[1],spaceIndex[3]};
-	char indexChars[spaceIndex[0]];
-	char nameChars[spaceIndex[2] - spaceIndex[1]];
-	char floorSpaceChars[spaceIndex[4] - spaceIndex[3]];
+	char indexChars[sizeStore[0]];
+	char nameChars[sizeStore[1]];
+	char floorSpaceChars[sizeStore[2]];
+	for(int a = 0; a < 3; a++)
+	{
+		for(int b = indexStore[a]; b < sizeStore[a]; b++)
+		{
+			switch(a)
+			{
+				case 0:
+					indexChars[b] = inputString[b];
+				break;
+                                case 1:
+					nameChars[b] = inputString[b+indexStore[a]];
+                                break;
+                                case 2:
+					floorSpaceChars[b] = inputString[
+                                break;
+
+			}
+		}
+	}
 	input-->index = inputIndex;
 	input-->name = inputName;
 	input-->floorSpace = inputFloorSpace;
