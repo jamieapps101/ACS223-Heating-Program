@@ -18,7 +18,8 @@ struct officeStructure
 };
 
 void getInputData( struct officeStructure *input, std::string inputLine);
-void getValidUserData(void * output, char type);
+void getNumericInput(int *inputVariable, int min, int max);
+void getStringInput(std::string *inputVariable, char type);
 void flag(int flagNo);
 
 
@@ -51,7 +52,7 @@ int main()
 	flag(1);
 	struct officeStructure officeOptions[15];
 	flag(2);
-        std::string tempString;
+  std::string tempString;
 	flag(3);
 	int optionsCounter = 0;
 	flag(4);
@@ -70,14 +71,14 @@ int main()
         }
 	// ~read data from file
 
-	// Close file stream 
+	// Close file stream
 	inputFile.close();
 	// ~Close file stream
 
 	//Ask user to Specify Office
 	std::cout << "How many rooms would you like to specfiy?:" << std::endl;
 	int rooms;
-	getValidUserData(&rooms, 'n');
+	getNumericInput(&rooms, 1, 20);
 	room userOffice[rooms];
 	std::cout << "For each of the following rooms, you must specify a type." << std::endl;
 	std::cout << "From the input file, you have the following options to choose:" << std::endl;
@@ -92,7 +93,8 @@ int main()
 	{
 		std::cout << a << ": ";
 		int inputValue;
-		getValidUserData(&inputValue, 'n');
+		getNumericInput(&inputValue, 1, optionsCounter);
+		//getValidUserData(&inputValue, 'n');
 		userOffice[a].setTypeIndex(inputValue);
 	}
 	std::cout << "You have entered rooms of the following types:" << std::endl;
@@ -104,6 +106,7 @@ int main()
 	// ~Ask user to specify office
 	return 0;
 }
+
 
 void getInputData( struct officeStructure *input, std::string inputLine)
 {
@@ -233,103 +236,115 @@ void getInputData( struct officeStructure *input, std::string inputLine)
         std::cout<< "inputFloorSpace: " << inputFloorSpace << std::endl;
 }
 
-void getValidUserData(void * output, char type)
+void getNumericInput(int *inputVariable, int min, int max)
 {
 	bool validInput = false;
-	std::string inputValue;
-	int stringLength;
 	while(validInput == false)
 	{
-		std::cin >> inputValue;
-		stringLength = inputValue.length();
+		bool continueChecking = true;
+		std::string inputValueString;
+		int inputValue = 0;
+		getline(std::cin,inputValueString);
+		bool negativeValue = false;
+		for(int a = 0; a < inputValueString.length(); a++)
+		{
+			if((inputValueString[a] >= '0' && inputValueString[a] <= '9') || inputValueString[a] == '-' || inputValueString[a] == '+')
+			{
+				switch(inputValueString[a])
+				{
+					case '-':
+					{
+						negativeValue != negativeValue;
+					}
+					break;
+					default:
+					{
+						inputValue = inputValue*10 + ((int)inputValueString[a] - '0');
+					}
+			 	}
+			}
+			else
+			{
+				std::cout << "Expecting integer, invalid character entered" << std::endl;
+				continueChecking = false;
+				break;
+			}
+		}
+		if(negativeValue)
+		{
+			inputValue *= -1;
+		}
+		if(inputValue < max && inputValue > min && continueChecking == true)
+		{
+			*inputVariable = inputValue;
+			validInput = true;
+		}
+		else
+		{
+			std::cout << "Incorrect input, please re-enter" << std::endl;
+			continueChecking = false;
+		}
+	}
+}
+
+void getStringInput(std::string *inputVariable, char type)
+{
+	bool validInput = false;
+	std::string inputValueString;
+	while(validInput == false)
+	{
+		getline(std::cin, inputValueString);
+		std::cout << "You entered (internal): " << inputValueString << std::endl;
 		switch(type)
 		{
-			case 'n':
+			case 'u':
+			case 'U':
 			{
-				validInput = true;
-				int valueStore;
-				int x;
-				while(x < stringLength && validInput == true)
+				bool upper = true;
+				for(int a = 0; a <= (inputValueString.length()-1); a++)
 				{
-					if(inputValue[x] <= 9 && inputValue[x] >= 0)
+					if(inputValueString[a] > 122 || inputValueString [a] < 97)
 					{
-						valueStore = valueStore*10 + inputValue[x];
+						upper = false;
+						std::cout << "Invalid input, expecting lower case, please re-enter" << std::endl;
+						std::cout << "On char" << inputValueString[a] << std::endl;
+						break;
 					}
 					else
 					{
-						std::cout << "Sorry, I'm expecting an integer value with no other characters, please try again: " << std::endl;
-						validInput = false;
+						validInput = true;
+					}
+				}
+			}
+			break;
+			case 'b':
+			case 'B':
+			{
+				// do nought
+			}
+			break;
+			case 'l':
+			case 'L':
+			{
+				bool lower = true;
+				for(int a = 0; a <= (inputValueString.length()-1); a++)
+				{
+					if(inputValueString[a] > 90 || inputValueString [a] < 65)
+					{
+						lower = false;
+						std::cout << "Invalid input, expecting upper case, please re-enter" << std::endl;
 						break;
 					}
-					int *intOutput = static_cast<int*>(output);
-					*intOutput = valueStore;
+					else
+					{
+						validInput = true;
+					}
 				}
 			}
-			break;
-
-			case 'C': // capital Letter
-			{
-				//cin >> inputValue;
-				char inputChar = inputValue[0];
-				if(inputChar >= 65 && inputChar <= 90) // aka a capital letter
-				{
-					//inputValue += 32; // convert to lowercase
-					//inputValue *= -1; // flag to output it was entered as upper case
-					//*output = inputChar;
-					char *charOutput = static_cast<char*>(output);
-					*charOutput = inputChar;
-					validInput = true;
-				}
-				else
-				{
-					std::cout << "Sorry, I'm expecting an upper case letter, please try again: " << std::endl;
-				}
-			}
-			break;
-
-                        case 'c': // lower case Letter
-			{
-                                //cin >> inputValue;
-				char inputChar = inputValue[0];
-                                if(inputChar >= 97 && inputChar <= 122) // aka a capital letter
-                                {
-                                        //*output = inputChar;
-					char *charOutput = static_cast<char*>(output);
-					*charOutput = inputChar;
-                                        validInput = true;
-                                }
-                                else
-                                {
-                                        std::cout << "Sorry, I'm expecting a lower case letter, please try again: " << std::endl;
-                                }
-			}
-                        break;
-
-                        case 'a': // any Letter
-			{
-                                //cin >> inputValue;
-				char inputChar = inputValue[0];
-                                if(inputChar >= 65 && inputChar <= 90 || inputChar >= 97 && inputChar <= 122) // aka a letter
-                                {
-                                        //*output = inputChar;
-					char *charOutput = static_cast<char*>(output);
-                                        *charOutput = inputChar;
-					validInput = true;
-                                }
-                                else
-                                {
-                                        std::cout << "Sorry, I'm expecting a letter, please try again: " << std::endl;
-                                }
-			}
-                        break;
-
-
-
-			default:
-				std::cout << "Internal error" << std::endl;
 			break;
 		}
 	}
+	*inputVariable = inputValueString;
 }
 
 
