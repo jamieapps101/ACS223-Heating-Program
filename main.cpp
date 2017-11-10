@@ -101,7 +101,7 @@ int main()
 	for(int a = 0; a < rooms; a++)
 	{
 		int roomType = userOffice[a].getTypeIndex();
-		std::cout << a << ": " << officeOptions[roomType].name << std::endl;
+		std::cout << a << ": " << officeOptions[roomType+1].name << std::endl;
 	}
 	// ~Ask user to specify office
 	return 0;
