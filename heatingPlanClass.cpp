@@ -20,6 +20,11 @@ void heatingPlanClass::setInitialCost(float input);
   initialCost = input;
 }
 
+void heatingPlanClass::setHeatingCost(float input);
+{
+  heatingCost = input;
+}
+
 char heatingPlanClass::getIndex());
 {
   return index;
@@ -31,6 +36,11 @@ char heatingPlanClass::getHeatingCostReduction();
 }
 
 char heatingPlanClass::getInitialCost();
+{
+  return initialCost;
+}
+
+void heatingPlanClass::getInitialCost();
 {
   return initialCost;
 }

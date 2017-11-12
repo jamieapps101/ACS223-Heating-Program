@@ -9,13 +9,15 @@
 // Main of heating calculator program
 // Written by Jamie Apps
 // 7/11/17
-//hello
+
 struct officeStructure
 {
 	int index;
 	std::string name;
 	int floorSpace;
 };
+
+
 
 void getInputData( struct officeStructure *input, std::string inputLine);
 void getIntInput(int *inputVariable, int min, int max);
@@ -58,18 +60,15 @@ int main()
 	int optionsCounter = 0;
 	flag(4);
 	while(getline(inputFile,tempString))
-        {
+  {
 		flag(10);
 		optionsCounter++;
 		flag(11);
-	        //getline(inputFile,tempString);
 		flag(12);
 		std::cout << "tempString " << tempString << std::endl;
-		//std::cout << std::endl;
 		getInputData( &(officeOptions[optionsCounter-1]), tempString);
 		flag(13);
-		//optionsCounter++;
-        }
+	}
 	// ~read data from file
 
 	// Close file stream
@@ -95,7 +94,6 @@ int main()
 		std::cout << "Room " << a << ": ";
 		int inputValue;
 		getIntInput(&inputValue, 1, optionsCounter);
-		//getValidUserData(&inputValue, 'n');
 		userOffice[a].setTypeIndex(inputValue);
 	}
 	std::cout << "You have entered rooms of the following types:" << std::endl;
@@ -106,6 +104,8 @@ int main()
 	}
 	// ~Ask user to specify office
 	// Ask user to heating options
+	heatingPlanClass heatingPlan;
+	heatingPlan.heatingPlan();
 	std::cout << "And now for each of these rooms, please specify how many hours per day you" << std::endl;
 	std::cout << "would like them to be heated for:" << std::endl;
 	for(int a = 0; a < rooms; a++)
@@ -123,15 +123,6 @@ int main()
 		getFloatInput(inputValue,0,365);
 		userOffice[a].setDaysPerYearHeated(inputValue);
 	}
-	std::cout << "Please specify what temperature you would like the room to increase by:" << std::endl;
-	for(int a = 0; a < rooms; a++)
-	{
-		std::cout << "Room " << a << ": ";
-		float inputValue;
-		getFloatInput(inputValue,0,24);
-		userOffice[a].setHeatingTemp(inputValue);
-	}
-
 	std::cout << "Would you like to use the default heating cost of  £0.015/oC/m2/hr ('d') or" << std::endl;
 	std::cout << "enter a custom value ('c') ? " << std::endl;
 	bool usefulResponse = false;
@@ -145,6 +136,9 @@ int main()
 			case 'C':
 			{
 				usefulResponse = true;
+				float input;
+				getFloatInput(input,0,100);
+				heatingPlan.setHeatingCost(input);
 			}
 			break;
 
@@ -152,6 +146,7 @@ int main()
 			case 'D':
 			{
 				usefulResponse = true;
+				heatingPlan.setHeatingCost(0.015);
 			}
 			break;
 
@@ -162,6 +157,23 @@ int main()
 			break;
 		}
 	}
+	std::cout << "Please specify what temperature you would like each room to increase by:" << std::endl;
+	for(int a = 0; a < rooms; a++)
+	{
+		std::cout << "Room " << a << ": ";
+		float inputValue;
+		getFloatInput(inputValue,0,24);
+		userOffice[a].setHeatingTemp(inputValue);
+	}
+	std::cout << "Here is a list of the annual cost of heating a room:" << std::endl;
+	for(int a = 0; a < rooms; a++)
+	{
+		std::cout<< "For room number " << a << " which is of type " << userOffice[a].getType() << std::endl;
+		float cost = userOffice[a].getHoursPerDayHeated() * userOffice[a].getDaysPerYearHeated() * userOffice[a].getHeatingTemp() * heatingPlan.getHeatingCost();
+		std::cout << " it would cost £" << cost << std::endl;
+	}
+	std::cout << "Now we will investigate the initial costs and payback times of installing an energy efficiency" << std::endl;
+	std::cout << "upgrade package. The following are a list of the potential upgrades:" << std::endl;
 	// ~Ask user to heating options
 	return 0;
 }
@@ -173,40 +185,27 @@ void getInputData( struct officeStructure *input, std::string inputLine)
 	int inputIndex = 0;
 	std::string inputName;
 	int inputFloorSpace = 0;
-
 	int spaceIndex[5];
 	int spaceCounter = 0;
-
 	bool previousSpace = false;
 	bool currentSpace = false;
-
 	char currentChar = false;
 	int currentIndex = 0;
 	flag(21);
-        std::cout << "InputLine " << inputLine << std::endl;
-        std::cout << "inputLine.length() " << inputLine.length() << std::endl;
-
+  std::cout << "InputLine " << inputLine << std::endl;
+  std::cout << "inputLine.length() " << inputLine.length() << std::endl;
 	while(currentIndex < inputLine.length())
 	{
 		currentChar = inputLine[currentIndex];
-		//std::cout << "  currentchar =" << currentChar << std::endl;
-		//flag(22);
 		if(currentChar == ' ' || currentChar == '	') // if the char is a space or a tab
 		{
 			currentSpace = true;
-			//std::cout<< "current space true" << std::endl;
 		}
-
 		if(currentSpace != previousSpace) // ie  start/end of data
 		{
 			spaceIndex[spaceCounter] = currentIndex;
-                        //std::cout<< "start/end data" << std::endl;
 			spaceCounter++;
 		}
-
-                //std::cout <<  "mid cycle, currentSpace = " << currentSpace << std::endl;
-                //std::cout <<  "mid cycle, previousSpace = " << previousSpace << std::endl;
-
 		if(currentSpace == true)
 		{
 			currentSpace = false;
@@ -216,18 +215,12 @@ void getInputData( struct officeStructure *input, std::string inputLine)
 		{
 			previousSpace = false;
 		}
-		//std::cout <<  "end of cycle, currentSpace = " << currentSpace << std::endl;
-                //std::cout <<  "end of cycle, previousSpace = " << previousSpace << std::endl;
 		currentIndex++;
 	}
 	flag(23);
 	spaceIndex[4] =  inputLine.length();
 	flag(231);
 	int sizeStore[3] = {spaceIndex[0],spaceIndex[2] - spaceIndex[1],spaceIndex[4] - spaceIndex[3]};
-        //std::cout << "sizeStore: " << sizeStore[1] << std::endl;
-        //std::cout << "space Index[4]: " << spaceIndex[4] << std::endl;
-        //std::cout << "space index [3]: " << spaceIndex[3] << std::endl;
-
 	std::cout << "inputLine.length(): " << inputLine.length() << std::endl;
 	flag(232);
 	int indexStore[3] = {0,spaceIndex[1],spaceIndex[3]};
@@ -238,16 +231,6 @@ void getInputData( struct officeStructure *input, std::string inputLine)
 	flag(235);
 	char floorSpaceChars[sizeStore[2]];
 	flag(24);
-	/*
-        std::cout << "sizeStore: " << sizeStore[0] << std::endl;
-        std::cout << "sizeStore: " << sizeStore[1] << std::endl;
-        std::cout << "sizeStore: " << sizeStore[2] << std::endl;
-        std::cout << "space Index[0]: " << spaceIndex[0] << std::endl;
-        std::cout << "space Index[1]: " << spaceIndex[1] << std::endl;
-        std::cout << "space Index[2]: " << spaceIndex[2] << std::endl;
-        std::cout << "space Index[3]: " << spaceIndex[3] << std::endl;
-	*/
-
 	for(int a = 0; a < 3; a++)
 	{
 		for(int b = 0; b < sizeStore[a]; b++)
@@ -261,27 +244,23 @@ void getInputData( struct officeStructure *input, std::string inputLine)
 					char currentChar = inputLine[b + indexStore[a]];
 					int currentCharAsInt = (int)currentChar - '0';
 					inputIndex = inputIndex * 10 + (int)currentChar - '0';
-                                        //std::cout << "  indexCharsAsInt= " << currentCharAsInt << std::endl;
 				}
 				break;
-                                case 1:
+        case 1:
 				{
 					flag(26);
 					nameChars[b] = inputLine[b + indexStore[a]];
-                                        ///std::cout << "  nameChars[b]= " << nameChars[b] << std::endl;
-                                }
+        }
 				break;
-                                case 2:
+        case 2:
 				{
 					flag(27);
 					floorSpaceChars[b] = inputLine[b + indexStore[a]];
 					char currentChar = inputLine[b + indexStore[a]];
 					int currentCharAsInt =  (int)currentChar - '0';
 					inputFloorSpace = inputFloorSpace * 10 + (int)currentChar - '0';
-                                        //std::cout << "  floorSpaceCharsAsInt= " << currentCharAsInt << std::endl;
-                                }
+        }
 				break;
-
 			}
 		}
 	}
