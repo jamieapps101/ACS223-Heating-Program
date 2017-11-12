@@ -6,7 +6,7 @@ room::room()
 	typeIndex = 0;
 	type = "";
 	floorSpace = 0;
-	hoursPerDayHeated = 0.0;D
+	hoursPerDayHeated = 0.0;
 }
 
 void room::setTypeIndex(int &input)
@@ -24,17 +24,17 @@ void room::setFloorSpace(int &input)
 	floorSpace = input;
 }
 
-void sethoursPerDayHeated(float &input)
+void room::setHoursPerDayHeated(float &input)
 {
 	hoursPerDayHeated = input;
 }
 
-void setDaysPerYearHeated(float &input);
+void room::setDaysPerYearHeated(float &input)
 {
 	daysPerYearHeated = input;
 }
 
-void setHeatingTemp(float &input);
+void room::setHeatingTemp(float &input)
 {
 	heatingTemp = input;
 }
@@ -54,17 +54,17 @@ int room::getFloorSpace()
         return floorSpace;
 }
 
-float getHoursPerDayHeated()
+float room::getHoursPerDayHeated()
 {
-	return HoursPerDayHeated;
+	return hoursPerDayHeated;
 }
 
-float getDaysPerYearHeated()
+float room::getDaysPerYearHeated()
 {
 	return daysPerYearHeated;
 }
 
-float getHeatingTemp()
+float room::getHeatingTemp()
 {
 	return heatingTemp;
 }

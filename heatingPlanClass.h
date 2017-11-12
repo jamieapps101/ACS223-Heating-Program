@@ -1,10 +1,10 @@
 class heatingPlanClass
 {
   private:
-    char Index;
+    char index;
     float initialCost;
     float heatingCostReduction;
-    float heatingCost = 0.015;// £/c/m^2/hr
+    float heatingCost;// £/c/m^2/hr
 
   public:
     heatingPlanClass();
@@ -13,9 +13,9 @@ class heatingPlanClass
     void setInitialCost(float input);
     void setHeatingCost(float input);
 
-    char getIndex());
+    char getIndex();
     float getHeatingCostReduction();
     float getInitialCost();
     float getHeatingCost();
     // some stuff abt calc-ing stuff
-}
+};

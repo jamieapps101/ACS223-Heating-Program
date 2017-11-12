@@ -16,9 +16,9 @@ class scenarioClass
 
   public:
     scenarioClass();
-    void setEfficiencyRating(char input);
+    void setEfficiencyRating(char &input);
     void printUpgradeOptions();
-    
+
     float getInitalCost();
     float getSavings();
-}
+};

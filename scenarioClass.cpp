@@ -1,5 +1,5 @@
 #include <iostream>
-#include scenarioClass.h
+#include "scenarioClass.h"
 
 scenarioClass::scenarioClass()
 {
@@ -14,12 +14,12 @@ scenarioClass::scenarioClass()
     }
     else
     {
-        efficiencyRatings[a].heatingCostScale = 1.0 - ((6-(float)a)*0.05)
+        efficiencyRatings[a].heatingCostScale = 1.0 - ((6-(float)a)*0.05);
     }
   }
 }
 
-void printUpgradeOptions()
+void scenarioClass::printUpgradeOptions()
 {
   for(int a = 0; a < 6; a++)
   {

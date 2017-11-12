@@ -1,10 +1,13 @@
 #define activation false
 
+#include <math.h>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include "room.h"
+#include "heatingPlanClass.h"
+#include "scenarioClass.h"
 #include <iomanip>
 // Main of heating calculator program
 // Written by Jamie Apps
@@ -105,14 +108,14 @@ int main()
 	// ~Ask user to specify office
 	// Ask user to heating options
 	heatingPlanClass heatingPlan;
-	heatingPlan.heatingPlan();
+	//heatingPlan.heatingPlanClass();
 	std::cout << "And now for each of these rooms, please specify how many hours per day you" << std::endl;
 	std::cout << "would like them to be heated for:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
 		std::cout << "Room " << a << ": ";
 		float inputValue;
-		getFloatInput(inputValue,0,24);
+		getFloatInput(&inputValue,0,24);
 		userOffice[a].setHoursPerDayHeated(inputValue);
 	}
 	std::cout << "Please specify how many days per year you would like them to be heated for:" << std::endl;
@@ -120,7 +123,7 @@ int main()
 	{
 		std::cout << "Room " << a << ": ";
 		float inputValue;
-		getFloatInput(inputValue,0,365);
+		getFloatInput(&inputValue,0,365);
 		userOffice[a].setDaysPerYearHeated(inputValue);
 	}
 	std::cout << "Would you like to use the default heating cost of  £0.015/oC/m2/hr ('d') or" << std::endl;
@@ -137,7 +140,7 @@ int main()
 			{
 				usefulResponse = true;
 				float input;
-				getFloatInput(input,0,100);
+				getFloatInput(&input,0,100);
 				heatingPlan.setHeatingCost(input);
 			}
 			break;
@@ -162,7 +165,7 @@ int main()
 	{
 		std::cout << "Room " << a << ": ";
 		float inputValue;
-		getFloatInput(inputValue,0,24);
+		getFloatInput( &inputValue,0,24);
 		userOffice[a].setHeatingTemp(inputValue);
 	}
 	std::cout << "Here is a list of the annual cost of heating a room:" << std::endl;
@@ -174,6 +177,12 @@ int main()
 	}
 	std::cout << "Now we will investigate the initial costs and payback times of installing an energy efficiency" << std::endl;
 	std::cout << "upgrade package. The following are a list of the potential upgrades:" << std::endl;
+	scenarioClass senarios[3];
+	//senarios[0].scenarioClass();
+	//senarios[1].scenarioClass();
+	//senarios[2].scenarioClass();
+	senarios[0].printUpgradeOptions();
+
 	// ~Ask user to heating options
 	return 0;
 }
@@ -385,7 +394,7 @@ void getStringInput(std::string *inputVariable, char type)
 	*inputVariable = inputValueString;
 }
 
-void getFloatInput(int *inputVariable, float min, float max)
+void getFloatInput(float *inputVariable, float min, float max)
 {
 	bool validInput = false;
 	while(validInput == false)
@@ -429,7 +438,7 @@ void getFloatInput(int *inputVariable, float min, float max)
 		{
 			initialPosition++;
 		}
-		for(int b = initialPosition; b < inputString.length(); b++)
+		for(int a = initialPosition; a < inputString.length(); a++)
 		{
 			switch(state)
 			{

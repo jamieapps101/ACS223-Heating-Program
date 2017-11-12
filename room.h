@@ -15,7 +15,7 @@ class room
 		void setTypeIndex(int &input); // pass by ref, not pass by pointer
 		void setType(std::string &input);
 		void setFloorSpace(int &input);
-		void sethoursPerDayHeated(float &input);
+		void setHoursPerDayHeated(float &input);
 		void setDaysPerYearHeated(float &input);
 		void setHeatingTemp(float &input);
 
