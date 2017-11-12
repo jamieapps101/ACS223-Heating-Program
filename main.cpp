@@ -18,9 +18,10 @@ struct officeStructure
 };
 
 void getInputData( struct officeStructure *input, std::string inputLine);
-void getNumericInput(int *inputVariable, int min, int max);
+void getIntInput(int *inputVariable, int min, int max);
 void getStringInput(std::string *inputVariable, char type);
 void flag(int flagNo);
+void getFloatInput(float *inputVariable, float min, float max);
 
 
 int main()
@@ -78,7 +79,7 @@ int main()
 	//Ask user to Specify Office
 	std::cout << "How many rooms would you like to specfiy?:" << std::endl;
 	int rooms;
-	getNumericInput(&rooms, 1, 20);
+	getIntInput(&rooms, 1, 20);
 	room userOffice[rooms];
 	std::cout << "For each of the following rooms, you must specify a type." << std::endl;
 	std::cout << "From the input file, you have the following options to choose:" << std::endl;
@@ -91,9 +92,9 @@ int main()
 	std::cout << "For each of the rooms, please specify a type by typing the index number" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
-		std::cout << a << ": ";
+		std::cout << "Room " << a << ": ";
 		int inputValue;
-		getNumericInput(&inputValue, 1, optionsCounter);
+		getIntInput(&inputValue, 1, optionsCounter);
 		//getValidUserData(&inputValue, 'n');
 		userOffice[a].setTypeIndex(inputValue);
 	}
@@ -104,6 +105,26 @@ int main()
 		std::cout << a << ": " << officeOptions[roomType+1].name << std::endl;
 	}
 	// ~Ask user to specify office
+	// Ask user to heating options
+	std::cout << "And now for each of these rooms, please specify how many hours per day you" << std::endl;
+	std::cout << "would like them to be heated for:" << std::endl;
+	for(int a = 0; a < rooms; a++)
+	{
+		std::cout << "Room " << a << ": ";
+		float inputValue;
+		getFloatInput(inputValue,0,24);
+		userOffice[a].setTypeIndex(inputValue);
+	}
+	std::cout << "And now for each of these rooms, please specify how many days per year you" << std::endl;
+	std::cout << "would like them to be heated for:" << std::endl;
+	for(int a = 0; a < rooms; a++)
+	{
+		std::cout << "Room " << a << ": ";
+		float inputValue;
+		getFloatInput(inputValue,0,24);
+		userOffice[a].setTypeIndex(inputValue);
+	}
+	// ~Ask user to heating options
 	return 0;
 }
 
@@ -231,12 +252,12 @@ void getInputData( struct officeStructure *input, std::string inputLine)
 	(*input).index = inputIndex;
 	(*input).name = inputName;
 	(*input).floorSpace = inputFloorSpace;
-        std::cout<< "inputIndex: " << inputIndex << std::endl;
-        std::cout<< "inputName: " << inputName << std::endl;
-        std::cout<< "inputFloorSpace: " << inputFloorSpace << std::endl;
+  std::cout<< "inputIndex: " << inputIndex << std::endl;
+  std::cout<< "inputName: " << inputName << std::endl;
+  std::cout<< "inputFloorSpace: " << inputFloorSpace << std::endl;
 }
 
-void getNumericInput(int *inputVariable, int min, int max)
+void getIntInput(int *inputVariable, int min, int max)
 {
 	bool validInput = false;
 	while(validInput == false)
@@ -347,6 +368,89 @@ void getStringInput(std::string *inputVariable, char type)
 	*inputVariable = inputValueString;
 }
 
+void getFloatInput(int *inputVariable, float min, float max)
+{
+	bool validInput = false;
+	while(validInput == false)
+	{
+		std::string inputString;
+		int negative = 0;
+		int negativePosition = 0;
+		int nonNumericChar = 0;
+		for(int a = 0; a < inputString.length(); a++)
+		{
+			if(inputString[a] == '-')
+			{
+				negative++;
+				negativePosition = a;
+			}
+			if((inputString[a] > '9' || inputString[a] < '0') && inputString[a] != '.' && inputString[a] != '-')
+			{
+				nonNumericChar++;
+			}
+		}
+		if(negative > 1)
+		{
+			std::cout << "Invalid input, too many '-' characters" << std::endl;
+			continue;
+		}
+		if(negativePosition != 0)
+		{
+			std::cout << "Invalid input, '-' not at beginning of number" << std::endl;
+			continue;
+		}
+		if(nonNumericChar > 0)
+		{
+			std::cout << "Invalid input, non numerical characters entered" << std::endl;
+			continue;
+		}
+		float outputValue = 0;
+		int state = 0; // state to hold uilding mode of numbers;
+		int initialPosition =0;
+		int dotPosition = 0;
+		if(negative == 1)
+		{
+			initialPosition++;
+		}
+		for(int b = initialPosition; b < inputString.length(); b++)
+		{
+			switch(state)
+			{
+				case 0:
+				{
+					if(inputString[a] != '.')
+					{
+						outputValue = outputValue * 10 + (float)(inputString[a] - '0');
+					}
+					else
+					{
+						state++;
+						dotPosition = a;
+					}
+				}
+				break;
+
+				case 1:
+				{
+					outputValue = outputValue + ((float)(inputString[a] - '0') * pow(10, dotPosition - a));
+				}
+				break;
+			}
+		}
+		if(outputValue > max)
+		{
+			std::cout << "Invalid input, input greater than expected maximum" << std::endl;
+			continue;
+		}
+		if(outputValue < min)
+		{
+			std::cout << "Invalid input, input greater than expected maximum" << std::endl;
+			continue;
+		}
+		*inputVariable = outputValue;
+		break;
+	}
+}
 
 void flag(int flagNo)
 {
