@@ -1,4 +1,6 @@
 #define activation false
+#define activation2 false
+#define activation3 true
 
 #include <math.h>
 #include <iostream>
@@ -26,7 +28,10 @@ void getInputData( struct officeStructure *input, std::string inputLine);
 void getIntInput(int *inputVariable, int min, int max);
 void getStringInput(std::string *inputVariable, char type);
 void flag(int flagNo);
+void flag2(int flagNo);
+void flag3(int flagNo);
 void getFloatInput(float *inputVariable, float min, float max);
+
 
 
 int main()
@@ -54,7 +59,7 @@ int main()
 	// ~Get valid input filename
 
 	// Read data from file
-	std::cout << "Reading data" << std::endl;
+	std::cout << "Reading data:" << std::endl;
 	flag(1);
 	struct officeStructure officeOptions[15];
 	flag(2);
@@ -68,7 +73,7 @@ int main()
 		optionsCounter++;
 		flag(11);
 		flag(12);
-		std::cout << "tempString " << tempString << std::endl;
+		std::cout <<  tempString << std::endl;
 		getInputData( &(officeOptions[optionsCounter-1]), tempString);
 		flag(13);
 	}
@@ -79,68 +84,79 @@ int main()
 	// ~Close file stream
 
 	//Ask user to Specify Office
-	std::cout << "How many rooms would you like to specfiy?:" << std::endl;
+	std::cout << std::endl << "How many rooms would you like to specfiy?:" << std::endl;
 	int rooms;
 	getIntInput(&rooms, 1, 20);
 	room userOffice[rooms];
-	std::cout << "For each of the following rooms, you must specify a type." << std::endl;
+	std::cout << std::endl << "For each of the following rooms, you must specify a type." << std::endl;
 	std::cout << "From the input file, you have the following options to choose:" << std::endl;
+	std::cout << std::setw(5) << "Index";
+	std::cout << std::setw(20) << "Name";
+	std::cout << std::setw(20) << "FloorSpace(m^2)" << std::endl;
 	for(int a = 0; a < optionsCounter; a++)
 	{
-		std::cout << std::setw(2) << officeOptions[a].index;
+		std::cout << std::setw(5) << officeOptions[a].index;
 		std::cout << std::setw(20) << officeOptions[a].name;
-		std::cout << std::setw(5) << officeOptions[a].floorSpace << std::endl;
+		std::cout << std::setw(20) << officeOptions[a].floorSpace << std::endl;
 	}
-	std::cout << "For each of the rooms, please specify a type by typing the index number" << std::endl;
+	std::cout << std::endl << "For each of the rooms, please specify a type by typing the index number" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
-		std::cout << "Room " << a << ": ";
+		std::cout << "Room " << a << ": " << std::endl;
 		int inputValue;
 		getIntInput(&inputValue, 1, optionsCounter);
+		std::cout << std::endl;
 		userOffice[a].setTypeIndex(inputValue);
+		//userOffice[a].setType(inputValue);
 	}
-	std::cout << "You have entered rooms of the following types:" << std::endl;
+	std::cout << std::endl << "You have entered rooms of the following types:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
 		int roomType = userOffice[a].getTypeIndex();
 		std::cout << a << ": " << officeOptions[roomType+1].name << std::endl;
+		userOffice[a].setType(officeOptions[roomType+1].name);
 	}
 	// ~Ask user to specify office
 	// Ask user to heating options
 	heatingPlanClass heatingPlan;
 	//heatingPlan.heatingPlanClass();
-	std::cout << "And now for each of these rooms, please specify how many hours per day you" << std::endl;
+	std::cout << std::endl << "And now for each of these rooms, please specify how many hours per day you" << std::endl;
 	std::cout << "would like them to be heated for:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
-		std::cout << "Room " << a << ": ";
+		std::cout << "Room " << a << ": " << std::endl;
 		float inputValue;
 		getFloatInput(&inputValue,0,24);
+		std::cout << std::endl;
 		userOffice[a].setHoursPerDayHeated(inputValue);
 	}
-	std::cout << "Please specify how many days per year you would like them to be heated for:" << std::endl;
+	std::cout << std::endl << "Please specify how many days per year you would like them to be heated for:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
-		std::cout << "Room " << a << ": ";
+		std::cout << "Room " << a << ": " << std::endl;
 		float inputValue;
 		getFloatInput(&inputValue,0,365);
+		std::cout << std::endl;
 		userOffice[a].setDaysPerYearHeated(inputValue);
 	}
-	std::cout << "Would you like to use the default heating cost of  £0.015/oC/m2/hr ('d') or" << std::endl;
+	std::cout << std::endl << "Would you like to use the default heating cost of  £0.015/oC/m2/hr ('d') or" << std::endl;
 	std::cout << "enter a custom value ('c') ? " << std::endl;
 	bool usefulResponse = false;
 	while(usefulResponse == false)
 	{
 		std::string heatingChoiceString;
 		getStringInput(&heatingChoiceString, 'b');
+		std::cout << std::endl;
 		switch(heatingChoiceString[0])
 		{
 			case 'c':
 			case 'C':
 			{
+				std::cout << "Please enter a new heating cost in £/C/m^2/hr:" << std::endl;
 				usefulResponse = true;
 				float input;
 				getFloatInput(&input,0,100);
+				std::cout << std::endl;
 				heatingPlan.setHeatingCost(input);
 			}
 			break;
@@ -160,7 +176,7 @@ int main()
 			break;
 		}
 	}
-	std::cout << "Please specify what temperature you would like each room to increase by:" << std::endl;
+	std::cout << std::endl << "Please specify what temperature you would like each room to increase by:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
 		std::cout << "Room " << a << ": ";
@@ -168,14 +184,14 @@ int main()
 		getFloatInput( &inputValue,0,24);
 		userOffice[a].setHeatingTemp(inputValue);
 	}
-	std::cout << "Here is a list of the annual cost of heating a room:" << std::endl;
+	std::cout << std::endl << "Here is a list of the annual cost of heating a room:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
-		std::cout<< "For room number " << a << " which is of type " << userOffice[a].getType() << std::endl;
+		std::cout<< "For room number " << a << " which is of type " << userOffice[a].getType() << std::endl; // getType not working////////////////////////////////
 		float cost = userOffice[a].getHoursPerDayHeated() * userOffice[a].getDaysPerYearHeated() * userOffice[a].getHeatingTemp() * heatingPlan.getHeatingCost();
-		std::cout << " it would cost £" << cost << std::endl;
+		std::cout << "it would cost £" << cost << std::endl;
 	}
-	std::cout << "Now we will investigate the initial costs and payback times of installing an energy efficiency" << std::endl;
+	std::cout << std::endl << "Now we will investigate the initial costs and payback times of installing an energy efficiency" << std::endl;
 	std::cout << "upgrade package. The following are a list of the potential upgrades:" << std::endl;
 	scenarioClass senarios[3];
 	//senarios[0].scenarioClass();
@@ -190,168 +206,165 @@ int main()
 
 void getInputData( struct officeStructure *input, std::string inputLine)
 {
-	flag(20);
-	int inputIndex = 0;
-	std::string inputName;
-	int inputFloorSpace = 0;
-	int spaceIndex[5];
-	int spaceCounter = 0;
-	bool previousSpace = false;
-	bool currentSpace = false;
-	char currentChar = false;
-	int currentIndex = 0;
-	flag(21);
-  std::cout << "InputLine " << inputLine << std::endl;
-  std::cout << "inputLine.length() " << inputLine.length() << std::endl;
-	while(currentIndex < inputLine.length())
+	std::string inputIndex = "";
+	int inputIndexInt = 0;
+	std::string inputName = "";
+	std::string inputFloorSpace = "";
+	int inputFloorSpaceInt = 0;
+	int intialNamePosition = 0;
+	int state = 0;
+	bool previousState = true;
+	for(int a = 0; a < inputLine.length(); a++)
 	{
-		currentChar = inputLine[currentIndex];
-		if(currentChar == ' ' || currentChar == '	') // if the char is a space or a tab
+		if(inputLine[a] != (char)32 && inputLine[a] != (char)9)
 		{
-			currentSpace = true;
-		}
-		if(currentSpace != previousSpace) // ie  start/end of data
-		{
-			spaceIndex[spaceCounter] = currentIndex;
-			spaceCounter++;
-		}
-		if(currentSpace == true)
-		{
-			currentSpace = false;
-			previousSpace = true;
-		}
-		else
-		{
-			previousSpace = false;
-		}
-		currentIndex++;
-	}
-	flag(23);
-	spaceIndex[4] =  inputLine.length();
-	flag(231);
-	int sizeStore[3] = {spaceIndex[0],spaceIndex[2] - spaceIndex[1],spaceIndex[4] - spaceIndex[3]};
-	std::cout << "inputLine.length(): " << inputLine.length() << std::endl;
-	flag(232);
-	int indexStore[3] = {0,spaceIndex[1],spaceIndex[3]};
-	flag(233);
-	char indexChars[sizeStore[0]];
-	flag(234);
-	char nameChars[sizeStore[1]];
-	flag(235);
-	char floorSpaceChars[sizeStore[2]];
-	flag(24);
-	for(int a = 0; a < 3; a++)
-	{
-		for(int b = 0; b < sizeStore[a]; b++)
-		{
-			switch(a)
+			previousState = true;
+			switch(state)
 			{
 				case 0:
 				{
-					flag(25);
-					indexChars[b] = inputLine[b + indexStore[a]];
-					char currentChar = inputLine[b + indexStore[a]];
-					int currentCharAsInt = (int)currentChar - '0';
-					inputIndex = inputIndex * 10 + (int)currentChar - '0';
+					inputIndexInt = inputIndexInt * 10 + (int)(inputLine[a] - '0');
 				}
 				break;
-        case 1:
+				case 1:
 				{
-					flag(26);
-					nameChars[b] = inputLine[b + indexStore[a]];
-        }
+					inputName += inputLine[a];
+				}
 				break;
-        case 2:
+				case 2:
 				{
-					flag(27);
-					floorSpaceChars[b] = inputLine[b + indexStore[a]];
-					char currentChar = inputLine[b + indexStore[a]];
-					int currentCharAsInt =  (int)currentChar - '0';
-					inputFloorSpace = inputFloorSpace * 10 + (int)currentChar - '0';
-        }
+					inputFloorSpaceInt = inputFloorSpaceInt * 10 + (int)(inputLine[a] - '0');
+				}
 				break;
 			}
 		}
+		else
+		{
+			if(previousState == true)
+			{
+				state++;
+				previousState = false;
+				if(state == 1)
+				{
+					intialNamePosition = a;
+				}
+			}
+		}
 	}
-	flag(28);
-	inputName = nameChars;
-	(*input).index = inputIndex;
+	(*input).index = inputIndexInt;
+	(*input).name = "";
 	(*input).name = inputName;
-	(*input).floorSpace = inputFloorSpace;
-  std::cout<< "inputIndex: " << inputIndex << std::endl;
-  std::cout<< "inputName: " << inputName << std::endl;
-  std::cout<< "inputFloorSpace: " << inputFloorSpace << std::endl;
+	(*input).floorSpace = inputFloorSpaceInt;
 }
 
 void getIntInput(int *inputVariable, int min, int max)
 {
 	bool validInput = false;
+	flag2(1);
 	while(validInput == false)
 	{
-		bool continueChecking = true;
-		std::string inputValueString;
-		int inputValue = 0;
-		getline(std::cin,inputValueString);
-		bool negativeValue = false;
-		for(int a = 0; a < inputValueString.length(); a++)
+		std::string inputString = "0";
+		int negative = 0;
+		int negativePosition = 0;
+		int nonNumericChar = 0;
+		getline(std::cin, inputString);
+		flag2(2);
+		for(int a = 0; a < inputString.length(); a++)
 		{
-			if((inputValueString[a] >= '0' && inputValueString[a] <= '9') || inputValueString[a] == '-' || inputValueString[a] == '+')
+			flag2(3);
+			if(inputString[a] == '-')
 			{
-				switch(inputValueString[a])
-				{
-					case '-':
-					{
-						negativeValue != negativeValue;
-					}
-					break;
-					default:
-					{
-						inputValue = inputValue*10 + ((int)inputValueString[a] - '0');
-					}
-			 	}
+				negative++;
+				negativePosition = a;
+				flag2(4);
 			}
-			else
+			if((inputString[a] > '9' || inputString[a] < '0')  && inputString[a] != '-')
 			{
-				std::cout << "Expecting integer, invalid character entered" << std::endl;
-				continueChecking = false;
-				break;
+				flag2(5);
+				nonNumericChar++;
 			}
 		}
-		if(negativeValue)
+
+		if(nonNumericChar > 0)
 		{
-			inputValue *= -1;
+			std::cout << "Invalid input, non numerical characters entered" << std::endl;
+			flag2(6);
+			continue;
 		}
-		if(inputValue < max && inputValue > min && continueChecking == true)
+		if(negative > 1)
 		{
-			*inputVariable = inputValue;
-			validInput = true;
+			std::cout << "Invalid input, too many '-' characters" << std::endl;
+			flag2(7);
+			continue;
 		}
-		else
+		if(negativePosition != 0)
 		{
-			std::cout << "Incorrect input, please re-enter" << std::endl;
-			continueChecking = false;
+			std::cout << "Invalid input, '-' not at beginning of number" << std::endl;
+			flag2(8);
+			continue;
 		}
+
+		int outputValue = 0;
+		//int state = 0; // state to hold uilding mode of numbers;
+		int initialPosition =0;
+		int dotPosition = 0;
+		if(negative == 1)
+		{
+			flag2(9);
+			initialPosition++;
+		}
+		for(int a = initialPosition; a < inputString.length(); a++)
+		{
+			flag2(10);
+				outputValue = outputValue * 10 + (int)(inputString[a] - '0');
+		}
+		if(negative == 1)
+		{
+			flag2(10.5);
+			outputValue *= -1;
+		}
+		//std::cout << "output value: " << outputValue << std::endl;
+		if(outputValue > max)
+		{
+			flag2(11);
+			std::cout << "Invalid input, input greater than expected maximum" << std::endl;
+			continue;
+		}
+		if(outputValue < min)
+		{
+			flag2(12);
+			std::cout << "Invalid input, input less than expected minimum" << std::endl;
+			continue;
+		}
+		flag2(13);
+		*inputVariable = outputValue;
+		break;
 	}
 }
 
 void getStringInput(std::string *inputVariable, char type)
 {
 	bool validInput = false;
-	std::string inputValueString;
+	std::string inputValueString = "0";
+	flag3(1);
 	while(validInput == false)
 	{
 		getline(std::cin, inputValueString);
 		std::cout << "You entered (internal): " << inputValueString << std::endl;
+		flag3(2);
 		switch(type)
 		{
 			case 'u':
 			case 'U':
 			{
+				flag3(3);
 				bool upper = true;
 				for(int a = 0; a <= (inputValueString.length()-1); a++)
 				{
+					flag3(4);
 					if(inputValueString[a] > 122 || inputValueString [a] < 97)
 					{
+						flag3(5);
 						upper = false;
 						std::cout << "Invalid input, expecting lower case, please re-enter" << std::endl;
 						std::cout << "On char" << inputValueString[a] << std::endl;
@@ -359,39 +372,51 @@ void getStringInput(std::string *inputVariable, char type)
 					}
 					else
 					{
+						flag3(6);
 						validInput = true;
 					}
 				}
 			}
 			break;
+
 			case 'b':
 			case 'B':
 			{
+				flag3(6);
+				validInput = true;
 				// do nought
 			}
 			break;
+
 			case 'l':
 			case 'L':
 			{
+				flag3(7);
 				bool lower = true;
 				for(int a = 0; a <= (inputValueString.length()-1); a++)
 				{
+					flag3(8);
 					if(inputValueString[a] > 90 || inputValueString [a] < 65)
 					{
+						flag3(9);
 						lower = false;
 						std::cout << "Invalid input, expecting upper case, please re-enter" << std::endl;
 						break;
 					}
 					else
 					{
+						flag3(10);
 						validInput = true;
 					}
 				}
 			}
 			break;
 		}
+		flag3(11);
 	}
+	flag3(12);
 	*inputVariable = inputValueString;
+	std::cout << "at output this was: " << *inputVariable << std::endl;
 }
 
 void getFloatInput(float *inputVariable, float min, float max)
@@ -399,10 +424,11 @@ void getFloatInput(float *inputVariable, float min, float max)
 	bool validInput = false;
 	while(validInput == false)
 	{
-		std::string inputString;
+		std::string inputString = "0";
 		int negative = 0;
 		int negativePosition = 0;
 		int nonNumericChar = 0;
+		getline(std::cin, inputString);
 		for(int a = 0; a < inputString.length(); a++)
 		{
 			if(inputString[a] == '-')
@@ -463,6 +489,10 @@ void getFloatInput(float *inputVariable, float min, float max)
 				break;
 			}
 		}
+		if(negative == 1)
+		{
+			outputValue *= -1;
+		}
 		if(outputValue > max)
 		{
 			std::cout << "Invalid input, input greater than expected maximum" << std::endl;
@@ -470,7 +500,7 @@ void getFloatInput(float *inputVariable, float min, float max)
 		}
 		if(outputValue < min)
 		{
-			std::cout << "Invalid input, input greater than expected maximum" << std::endl;
+			std::cout << "Invalid input, input less than expected minimum" << std::endl;
 			continue;
 		}
 		*inputVariable = outputValue;
@@ -481,6 +511,22 @@ void getFloatInput(float *inputVariable, float min, float max)
 void flag(int flagNo)
 {
 	if(activation == true)
+	{
+		std::cout << "Flag " << flagNo << std::endl;
+	}
+}
+
+void flag2(int flagNo)
+{
+	if(activation2 == true)
+	{
+		std::cout << "Flag " << flagNo << std::endl;
+	}
+}
+
+void flag3(int flagNo)
+{
+	if(activation3 == true)
 	{
 		std::cout << "Flag " << flagNo << std::endl;
 	}
