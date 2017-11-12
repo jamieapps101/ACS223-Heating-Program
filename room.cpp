@@ -34,6 +34,11 @@ void setDaysPerYearHeated(float &input);
 	daysPerYearHeated = input;
 }
 
+void setHeatingTemp(float &input);
+{
+	heatingTemp = input;
+}
+
 int room::getTypeIndex()
 {
         return typeIndex;
@@ -57,4 +62,9 @@ float getHoursPerDayHeated()
 float getDaysPerYearHeated()
 {
 	return daysPerYearHeated;
+}
+
+float getHeatingTemp()
+{
+	return heatingTemp;
 }

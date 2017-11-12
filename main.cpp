@@ -113,16 +113,54 @@ int main()
 		std::cout << "Room " << a << ": ";
 		float inputValue;
 		getFloatInput(inputValue,0,24);
-		userOffice[a].setTypeIndex(inputValue);
+		userOffice[a].setHoursPerDayHeated(inputValue);
 	}
-	std::cout << "And now for each of these rooms, please specify how many days per year you" << std::endl;
-	std::cout << "would like them to be heated for:" << std::endl;
+	std::cout << "Please specify how many days per year you would like them to be heated for:" << std::endl;
+	for(int a = 0; a < rooms; a++)
+	{
+		std::cout << "Room " << a << ": ";
+		float inputValue;
+		getFloatInput(inputValue,0,365);
+		userOffice[a].setDaysPerYearHeated(inputValue);
+	}
+	std::cout << "Please specify what temperature you would like the room to increase by:" << std::endl;
 	for(int a = 0; a < rooms; a++)
 	{
 		std::cout << "Room " << a << ": ";
 		float inputValue;
 		getFloatInput(inputValue,0,24);
-		userOffice[a].setTypeIndex(inputValue);
+		userOffice[a].setHeatingTemp(inputValue);
+	}
+
+	std::cout << "Would you like to use the default heating cost of  £0.015/oC/m2/hr ('d') or" << std::endl;
+	std::cout << "enter a custom value ('c') ? " << std::endl;
+	bool usefulResponse = false;
+	while(usefulResponse == false)
+	{
+		std::string heatingChoiceString;
+		getStringInput(&heatingChoiceString, 'b');
+		switch(heatingChoiceString[0])
+		{
+			case 'c':
+			case 'C':
+			{
+				usefulResponse = true;
+			}
+			break;
+
+			case 'd':
+			case 'D':
+			{
+				usefulResponse = true;
+			}
+			break;
+
+			default:
+			{
+				std::cout << "the first letter of that wasn't a particuarly useful response, try 'd' or 'c' next time" << std::endl;
+			}
+			break;
+		}
 	}
 	// ~Ask user to heating options
 	return 0;

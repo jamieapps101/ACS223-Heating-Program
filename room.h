@@ -8,6 +8,7 @@ class room
 		int floorSpace;
 		float hoursPerDayHeated;
 		float daysPerYearHeated;
+		float heatingTemp;
 
 	public:
 		room();
@@ -16,9 +17,12 @@ class room
 		void setFloorSpace(int &input);
 		void sethoursPerDayHeated(float &input);
 		void setDaysPerYearHeated(float &input);
+		void setHeatingTemp(float &input);
+
     int getTypeIndex();
     std::string getType();
     int getFloorSpace();
 		float getHoursPerDayHeated();
 		float getDaysPerYearHeated();
+		float getHeatingTemp();
 };

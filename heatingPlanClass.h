@@ -4,15 +4,18 @@ class heatingPlanClass
     char Index;
     float initialCost;
     float heatingCostReduction;
-    const float initialHeatingCost = 0.015;// £/c/m^2/hr
+    float initialDefaultHeatingCost = 0.015;// £/c/m^2/hr
 
   public:
     heatingPlanClass();
     void setIndex(char input);
     void setHeatingCostReduction(float input);
     void setInitialCost(float input);
+    void setInitialDefaultHeatingCost(float input);
+
     char getIndex());
-    char getHeatingCostReduction();
-    char getInitialCost();
+    float getHeatingCostReduction();
+    float getInitialCost();
+    float getInitialDefaultHeatingCost();
     // some stuff abt calc-ing stuff
 }
