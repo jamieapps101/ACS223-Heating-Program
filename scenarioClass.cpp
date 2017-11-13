@@ -2,6 +2,7 @@
 #include <iomanip>
 #include "scenarioClass.h"
 #include <string>
+#include <math.h>
 
 scenarioClass::scenarioClass()
 {
@@ -88,5 +89,6 @@ int scenarioClass::paybackPeriodInDays()
     paybackPeriodCopy--;
   }
   days = years * 365;
-
+  days += (int)round(paybackPeriodCopy * 365);
+  return days;
 }

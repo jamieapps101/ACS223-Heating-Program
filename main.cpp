@@ -36,14 +36,14 @@ void getFloatInput(float *inputVariable, float min, float max);
 
 int main()
 {
-	bool validInputFileName = false;; /////////////////////////////////////This and line below /////////////////////////////////////
+	bool validInputFileName = false;
 	std::string inputFileName = "inputdata.txt";
 	std::ifstream inputFile;
 	// Get valid input file
 	std::cout << "Please input name of file:" << std::endl;
 	while(validInputFileName == false)
 	{
-		//std::cin >> inputFileName; ////////////////////////////////////This one/////////////////////////////////
+		getline(std::cin, inputFileName);
 		inputFile.open(inputFileName.c_str());
 		if(!inputFile)
 		{
@@ -115,6 +115,7 @@ int main()
 		int roomType = userOffice[a].getTypeIndex();
 		std::cout << a << ": " << officeOptions[roomType+1].name << std::endl;
 		userOffice[a].setType(officeOptions[roomType+1].name);
+		userOffice[a].setFloorSpace(officeOptions[roomType+1].floorSpace);
 	}
 	// ~Ask user to specify office
 	// Ask user to heating options
@@ -189,10 +190,11 @@ int main()
 	for(int a = 0; a < rooms; a++)
 	{
 		std::cout<< "For room number " << a << " which is of type " << userOffice[a].getType(); // getType not working////////////////////////////////
-		float cost = userOffice[a].getHoursPerDayHeated() * userOffice[a].getDaysPerYearHeated() * userOffice[a].getHeatingTemp() * heatingPlan.getHeatingCost();
+		float cost = userOffice[a].getHoursPerDayHeated() * userOffice[a].getDaysPerYearHeated() * userOffice[a].getHeatingTemp() * heatingPlan.getHeatingCost() * 24 * 365;
 		currentTotalAnnualCostforBuilding += cost;
 		std::cout << "it would cost £" << cost << std::endl;
 	}
+	std::cout << std::endl << "and this is the total annual cost: " << currentTotalAnnualCostforBuilding << std::endl;
 		// ~Ask user to heating options
 		// Compare savings
 	std::cout << std::endl << "Now we will investigate the initial costs and payback times of installing an energy efficiency" << std::endl;
@@ -228,7 +230,7 @@ int main()
 		senarios[a].setEfficiencyRating(packageSelected);
 		std::cout << std::endl;
 
-		std::cout <<  "Before the upgrade, the cost is: " << currentTotalAnnualCostforBuilding << std::endl;
+		std::cout <<  "Before the upgrade, the annual cost is: £" << currentTotalAnnualCostforBuilding << std::endl;
 		std::cout << std::endl;
 
 		int initialUpgradeCost = 0;
@@ -238,11 +240,11 @@ int main()
 			totalFloorSpace += userOffice[a].getFloorSpace();
 		}
 		float currentScenarioUpgradeCost = senarios[a].getInitialCost()*totalFloorSpace;
-		std::cout <<  "For this upgrade, the initial cost will be: " <<  currentScenarioUpgradeCost << std::endl;
+		std::cout <<  "For this upgrade, the initial cost will be: £" <<  currentScenarioUpgradeCost << std::endl;
 		float newTotalAnnualCostforBuilding =  currentTotalAnnualCostforBuilding*senarios[a].getSavings();
-		std::cout <<  "While the new annual cost will be: " <<  newTotalAnnualCostforBuilding << std::endl;
+		std::cout <<  "While the new annual cost will be: £" <<  newTotalAnnualCostforBuilding << std::endl;
 		float diffAnnualCost = currentTotalAnnualCostforBuilding - newTotalAnnualCostforBuilding;
-		std::cout <<  "This is a yearly saving of: " <<  diffAnnualCost << std::endl;
+		std::cout <<  "This is a yearly saving of: £" <<  diffAnnualCost << std::endl;
 		float paybacktime = currentScenarioUpgradeCost/diffAnnualCost;
 		std::cout <<  "This will therefore take: " <<  paybacktime << " years to pay off" << std::endl <<std::endl;
 		senarios[a].setUpgradeCost(currentScenarioUpgradeCost);
@@ -251,18 +253,18 @@ int main()
    std::cout << std::endl;
 	 std::cout <<  "In summary: " << std::endl;
 	 std::cout <<  std::setw(11) << "Scenario:";
-	 std::cout <<  std::setw(11) << "Upgrade Cost(£):";
-	 std::cout <<  std::setw(11) << "Payback time(days):" << std::endl;
+	 std::cout <<  std::setw(18) << "Upgrade Cost(£):";
+	 std::cout <<  std::setw(20) << "Payback time(days):" << std::endl;
 	 int bestScenario = 0;
 	 int lowestPaybackTime = 100000;
 	 for(int a = 0; a < 3; a++)
 	 {
 		 std::cout <<  std::setw(11) << a;
-		 std::cout <<  std::setw(11) << senarios[a].getUpgradeCost();
-		 std::cout <<  std::setw(11) << senarios[a].getPaybackPeriod() << std::endl;
-		 if(senarios[a].getPaybackPeriod() < lowestPaybackTime)
+		 std::cout <<  std::setw(18) << senarios[a].getUpgradeCost();
+		 std::cout <<  std::setw(20) << senarios[a].paybackPeriodInDays() << std::endl;
+		 if(senarios[a].paybackPeriodInDays() < lowestPaybackTime)
 		 {
-			 lowestPaybackTime = senarios[a].getPaybackPeriod();
+			 lowestPaybackTime = senarios[a].paybackPeriodInDays();
 			 bestScenario = a;
 		 }
 	 }
