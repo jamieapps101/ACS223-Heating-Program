@@ -1,5 +1,7 @@
 #include <iostream>
+#include <iomanip>
 #include "scenarioClass.h"
+#include <string>
 
 scenarioClass::scenarioClass()
 {
@@ -17,30 +19,74 @@ scenarioClass::scenarioClass()
         efficiencyRatings[a].heatingCostScale = 1.0 - ((6-(float)a)*0.05);
     }
   }
+  upgradeCost = 0;
+  paybackPeriod = 0;
 }
 
 void scenarioClass::printUpgradeOptions()
 {
+  std::cout << std::setw(14) << "Package";
+  std::cout << std::setw(29) << "Initial upgrade cost: ";
+  std::cout << std::setw(36)<< "Original Heating cost Scale: " << std::endl;
   for(int a = 0; a < 6; a++)
   {
-    std::cout << "Package: " << efficiencyRatings[a].type << ", ";
-    std::cout << "Initial upgrade cost: " << efficiencyRatings[a].initialCost << " £/m^2, ";
+    std::cout << std::setw(14) << efficiencyRatings[a].type << ", ";
+    std::cout << std::setw(19)  << efficiencyRatings[a].initialCost << " £/m^2, ";
     char percentageChar = 37;
-    std::cout << "Original Heating cost Scale: " << efficiencyRatings[a].heatingCostScale*100 << percentageChar << std::endl;
+    std::cout << std::setw(33) << efficiencyRatings[a].heatingCostScale*100 << percentageChar << std::endl;
   }
 }
 
 void scenarioClass::setEfficiencyRating(char &input)
 {
-  chosenffeciencyRating = input;
+  chosenEffeciencyRating = input;
+}
+
+void scenarioClass::setUpgradeCost(float &input)
+{
+  upgradeCost = input;
+}
+
+void scenarioClass::setPaybackPeriod(float &input)
+{
+  paybackPeriod = input;
+}
+
+char getEfficiencyRating()
+{
+  return chosenEffeciencyRating;
 }
 
 float scenarioClass::getInitalCost()
 {
-
+  return efficiencyRatings[ (int)(chosenEffeciencyRating - 'a')].initialCost;
 }
 
 float scenarioClass::getSavings()
 {
+  return efficiencyRatings[ (int)(chosenEffeciencyRating - 'a')].heatingCostScale;
+}
+
+float scenarioClass::getUpgradeCost()
+{
+    return upgradeCost;
+}
+
+float scenarioClass::getPaybackPeriod()
+{
+  return paybackPeriod;
+}
+
+int scenarioClass::paybackPeriodInDays()
+{
+  int years = 0;
+  int days = 0;;
+  float paybackPeriodCopy = payBackPeriod;
+  while(paybackPeriodCopy > 1)
+  {
+    years++;
+    paybackPeriodCopy--;
+  }
+  days = years * 365;
 
 }

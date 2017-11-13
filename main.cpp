@@ -1,6 +1,6 @@
 #define activation false
 #define activation2 false
-#define activation3 true
+#define activation3 false
 
 #include <math.h>
 #include <iostream>
@@ -139,7 +139,7 @@ int main()
 		std::cout << std::endl;
 		userOffice[a].setDaysPerYearHeated(inputValue);
 	}
-	std::cout << std::endl << "Would you like to use the default heating cost of  £0.015/oC/m2/hr ('d') or" << std::endl;
+	std::cout << std::endl << "Would you like to use the default heating cost of  £0.015/C/m^2/hr ('d') or" << std::endl;
 	std::cout << "enter a custom value ('c') ? " << std::endl;
 	bool usefulResponse = false;
 	while(usefulResponse == false)
@@ -155,7 +155,7 @@ int main()
 				std::cout << "Please enter a new heating cost in £/C/m^2/hr:" << std::endl;
 				usefulResponse = true;
 				float input;
-				getFloatInput(&input,0,100);
+				getFloatInput(&input,0,1);
 				std::cout << std::endl;
 				heatingPlan.setHeatingCost(input);
 			}
@@ -185,21 +185,91 @@ int main()
 		userOffice[a].setHeatingTemp(inputValue);
 	}
 	std::cout << std::endl << "Here is a list of the annual cost of heating a room:" << std::endl;
+	float currentTotalAnnualCostforBuilding = 0;
 	for(int a = 0; a < rooms; a++)
 	{
-		std::cout<< "For room number " << a << " which is of type " << userOffice[a].getType() << std::endl; // getType not working////////////////////////////////
+		std::cout<< "For room number " << a << " which is of type " << userOffice[a].getType(); // getType not working////////////////////////////////
 		float cost = userOffice[a].getHoursPerDayHeated() * userOffice[a].getDaysPerYearHeated() * userOffice[a].getHeatingTemp() * heatingPlan.getHeatingCost();
+		currentTotalAnnualCostforBuilding += cost;
 		std::cout << "it would cost £" << cost << std::endl;
 	}
+		// ~Ask user to heating options
+		// Compare savings
 	std::cout << std::endl << "Now we will investigate the initial costs and payback times of installing an energy efficiency" << std::endl;
 	std::cout << "upgrade package. The following are a list of the potential upgrades:" << std::endl;
 	scenarioClass senarios[3];
-	//senarios[0].scenarioClass();
-	//senarios[1].scenarioClass();
-	//senarios[2].scenarioClass();
 	senarios[0].printUpgradeOptions();
+	std::cout << std::endl;
+	std::cout << "These upgrades will be a building wide upgrade, so will be automatrically applied to each room" << std::endl;
+	std::cout << "We will run 3 senarios to test, where each senario will apply a certain upgrade, please select" << std::endl;
+	std::cout << "from the upgrades above by inputting a package letter:"<<std::endl;
+	for(int a = 0; a < 3; a++)
+	{
+		std::cout << "Senario " << a << std::endl;
+		char packageSelected = 'x';
+		while(packageSelected == 'x')
+		{
+			std::string inputString = "";
+			getStringInput(&inputString, 'b');
+			if(inputString[0] < 97)
+			{
+				inputString[0] += 32;
+			}
 
-	// ~Ask user to heating options
+			if(inputString[0] == 'a' || inputString[0] == 'b' || inputString[0] == 'c' || inputString[0] == 'd' || inputString[0] == 'e' || inputString[0] == 'f')
+			{
+				packageSelected = inputString[0];
+			}
+			else
+			{
+				std::cout << "Incorrect letter chosen, please renter" << std::endl << std::endl;
+			}
+		}
+		senarios[a].setEfficiencyRating(packageSelected);
+		std::cout << std::endl;
+
+		std::cout <<  "Before the upgrade, the cost is: " << currentTotalAnnualCostforBuilding << std::endl;
+		std::cout << std::endl;
+
+		int initialUpgradeCost = 0;
+		int totalFloorSpace = 0;
+		for(int b = 0; b < rooms; b++)
+		{
+			totalFloorSpace += userOffice[a].getFloorSpace();
+		}
+		float currentScenarioUpgradeCost = senario[a].getInitialCost()*totalFloorSpace;
+		std::cout <<  "For this upgrade, the initial cost will be: " <<  currentScenarioUpgradeCost << std::endl;
+		float newTotalAnnualCostforBuilding =  currentTotalAnnualCostforBuilding*scenario[a].getSavings();
+		std::cout <<  "While the new annual cost will be: " <<  newTotalAnnualCostforBuilding << std::endl;
+		float diffAnnualCost = currentTotalAnnualCostforBuilding - newTotalAnnualCostforBuilding;
+		std::cout <<  "This is a yearly saving of: " <<  diffAnnualCost << std::endl;
+		float paybacktime = currentScenarioUpgradeCost/diffAnnualCost;
+		std::cout <<  "This will therefore take: " <<  paybacktime << " years to pay off" << std::endl <<std::endl;
+		senario[a].setUpgradeCost(currentScenarioUpgradeCost);
+		senario[a].setPaybackPeriod(paybacktime);
+	}
+   std::cout << std::endl;
+	 std::cout <<  "In summary: "<< std::endl
+	 std::cout <<  std::setw(11) << "Scenario:";
+	 std::cout <<  std::setw(11) << "Upgrade Cost(£):";
+	 std::cout <<  std::setw(11) << "Payback time(days):" << std::endl;
+	 int bestScenario = 0;
+	 int lowestPaybackTime = 100000;
+	 for(int a = 0: a < 3; a++)
+	 {
+		 std::cout <<  std::setw(11) << a;
+		 std::cout <<  std::setw(11) << senario[a].getUpgradeCost();
+		 std::cout <<  std::setw(11) << scenario[a].getPaybackPeriod() << std::endl;
+		 if(scenario[a].getPaybackPeriod() < lowestPaybackTime)
+		 {
+			 lowestPaybackTime = scenario[a].getPaybackPeriod();
+			 bestScenario = a;
+		 }
+	 }
+	 std::cout << std::endl;
+	std::cout <<  "Therefore the best scenario based on payback period is scenario "<< bestScenario << std::endl;
+	std::cout <<  "Which is a model of efficiency upgrade: " << scenario[bestScenario].getEfficiencyRating()  << std::endl;
+	// ~Compare savings
 	return 0;
 }
 
@@ -350,7 +420,7 @@ void getStringInput(std::string *inputVariable, char type)
 	while(validInput == false)
 	{
 		getline(std::cin, inputValueString);
-		std::cout << "You entered (internal): " << inputValueString << std::endl;
+		//std::cout << "You entered (internal): " << inputValueString << std::endl;
 		flag3(2);
 		switch(type)
 		{
@@ -416,7 +486,7 @@ void getStringInput(std::string *inputVariable, char type)
 	}
 	flag3(12);
 	*inputVariable = inputValueString;
-	std::cout << "at output this was: " << *inputVariable << std::endl;
+	//std::cout << "at output this was: " << *inputVariable << std::endl;
 }
 
 void getFloatInput(float *inputVariable, float min, float max)
