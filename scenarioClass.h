@@ -23,7 +23,7 @@ class scenarioClass
 		void setPaybackPeriod(float &input);
 
 		char getEfficiencyRating();
-    float getInitalCost();
+    float getInitialCost();
     float getSavings();
 		float getUpgradeCost();
 		float getPaybackPeriod();

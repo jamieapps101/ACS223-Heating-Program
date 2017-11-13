@@ -52,12 +52,12 @@ void scenarioClass::setPaybackPeriod(float &input)
   paybackPeriod = input;
 }
 
-char getEfficiencyRating()
+char scenarioClass::getEfficiencyRating()
 {
   return chosenEffeciencyRating;
 }
 
-float scenarioClass::getInitalCost()
+float scenarioClass::getInitialCost()
 {
   return efficiencyRatings[ (int)(chosenEffeciencyRating - 'a')].initialCost;
 }
@@ -81,7 +81,7 @@ int scenarioClass::paybackPeriodInDays()
 {
   int years = 0;
   int days = 0;;
-  float paybackPeriodCopy = payBackPeriod;
+  float paybackPeriodCopy = paybackPeriod;
   while(paybackPeriodCopy > 1)
   {
     years++;

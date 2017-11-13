@@ -237,38 +237,38 @@ int main()
 		{
 			totalFloorSpace += userOffice[a].getFloorSpace();
 		}
-		float currentScenarioUpgradeCost = senario[a].getInitialCost()*totalFloorSpace;
+		float currentScenarioUpgradeCost = senarios[a].getInitialCost()*totalFloorSpace;
 		std::cout <<  "For this upgrade, the initial cost will be: " <<  currentScenarioUpgradeCost << std::endl;
-		float newTotalAnnualCostforBuilding =  currentTotalAnnualCostforBuilding*scenario[a].getSavings();
+		float newTotalAnnualCostforBuilding =  currentTotalAnnualCostforBuilding*senarios[a].getSavings();
 		std::cout <<  "While the new annual cost will be: " <<  newTotalAnnualCostforBuilding << std::endl;
 		float diffAnnualCost = currentTotalAnnualCostforBuilding - newTotalAnnualCostforBuilding;
 		std::cout <<  "This is a yearly saving of: " <<  diffAnnualCost << std::endl;
 		float paybacktime = currentScenarioUpgradeCost/diffAnnualCost;
 		std::cout <<  "This will therefore take: " <<  paybacktime << " years to pay off" << std::endl <<std::endl;
-		senario[a].setUpgradeCost(currentScenarioUpgradeCost);
-		senario[a].setPaybackPeriod(paybacktime);
+		senarios[a].setUpgradeCost(currentScenarioUpgradeCost);
+		senarios[a].setPaybackPeriod(paybacktime);
 	}
    std::cout << std::endl;
-	 std::cout <<  "In summary: "<< std::endl
+	 std::cout <<  "In summary: " << std::endl;
 	 std::cout <<  std::setw(11) << "Scenario:";
 	 std::cout <<  std::setw(11) << "Upgrade Cost(£):";
 	 std::cout <<  std::setw(11) << "Payback time(days):" << std::endl;
 	 int bestScenario = 0;
 	 int lowestPaybackTime = 100000;
-	 for(int a = 0: a < 3; a++)
+	 for(int a = 0; a < 3; a++)
 	 {
 		 std::cout <<  std::setw(11) << a;
-		 std::cout <<  std::setw(11) << senario[a].getUpgradeCost();
-		 std::cout <<  std::setw(11) << scenario[a].getPaybackPeriod() << std::endl;
-		 if(scenario[a].getPaybackPeriod() < lowestPaybackTime)
+		 std::cout <<  std::setw(11) << senarios[a].getUpgradeCost();
+		 std::cout <<  std::setw(11) << senarios[a].getPaybackPeriod() << std::endl;
+		 if(senarios[a].getPaybackPeriod() < lowestPaybackTime)
 		 {
-			 lowestPaybackTime = scenario[a].getPaybackPeriod();
+			 lowestPaybackTime = senarios[a].getPaybackPeriod();
 			 bestScenario = a;
 		 }
 	 }
 	 std::cout << std::endl;
 	std::cout <<  "Therefore the best scenario based on payback period is scenario "<< bestScenario << std::endl;
-	std::cout <<  "Which is a model of efficiency upgrade: " << scenario[bestScenario].getEfficiencyRating()  << std::endl;
+	std::cout <<  "Which is a model of efficiency upgrade: " << senarios[bestScenario].getEfficiencyRating()  << std::endl;
 	// ~Compare savings
 	return 0;
 }
